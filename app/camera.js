@@ -13,7 +13,7 @@ export function createCamera() {
     near: 1,
     far: 5000
   })
-  camera.position.z = 100
+  camera.position.z = 0
   camera.position.y = 0
   camera.position.x = 0
 

@@ -8,6 +8,7 @@ import THREE, {
   Raycaster,
   Scene,
   Vector2,
+  Vector3,
   WebGLRenderer
 } from 'three'
 import { createCamera } from './camera'
@@ -28,6 +29,9 @@ export function createScene() {
 
   window.camera = camera
 
+  camera.position.set(0, 400, 500)
+  camera.lookAt(new Vector3(0, 80, 0))
+
   const highlight = createHighlight({ size: boxSize })
   scene.add(highlight)
 
@@ -35,11 +39,11 @@ export function createScene() {
   for (let x = 0; x < 10; x++) {
     for(let y = 0; y < 12; y++) {
       for(let z = 0; z < 8; z++) {
-        if (z == 0 || Math.random() > 0.8) {
+        if (z == 0 || Math.random() > 0.95) {
           const box = createBox({
             x: (x * boxSize) - (boxSize * 10) / 2,
-            y: (z * boxSize) - 100,
-            z: -(y * boxSize) - 200,
+            y: (z * boxSize),
+            z: (y * boxSize) - (boxSize * 12) / 2,
             size: boxSize,
           })
           grid.push(box)
@@ -49,11 +53,15 @@ export function createScene() {
     }
   }
 
-  const ambLight = new AmbientLight( 0x404040 )
+  const ambLight = new AmbientLight( 0x353535 )
   scene.add( ambLight )
 
-  const pointLight = new PointLight( 0xff5566, 1, 500 )
-  pointLight.position.set( 50, 50, 50 )
+  let pointLight = new PointLight( 0x4477aa, 1, 500 )
+  pointLight.position.set( 50, 150, 100 )
+  scene.add(pointLight)
+
+  pointLight = new PointLight( 0xff5566, 1, 500 )
+  pointLight.position.set( -50, 280, -280 )
   scene.add(pointLight)
 
   const renderer = new WebGLRenderer({
@@ -118,9 +126,11 @@ export function createScene() {
 
   function onRightClick(event) {
     event.preventDefault()
-    scene.remove(hovered.object)
-    const index = grid.indexOf(hovered.object)
-    grid.splice(index, 1);
+    if (hovered) {
+      scene.remove(hovered.object)
+      const index = grid.indexOf(hovered.object)
+      grid.splice(index, 1)
+    }
     return false
   }
 
@@ -138,14 +148,16 @@ export function createScene() {
   function onLeftClick(event) {
     console.log('hovered', hovered)
 
-    const box = createBox({
-      x: hovered.object.position.x + hovered.face.normal.x * boxSize,
-      y: hovered.object.position.y + hovered.face.normal.y * boxSize,
-      z: hovered.object.position.z + hovered.face.normal.z * boxSize,
-      size: boxSize
-    })
-    grid.push(box)
-    scene.add(box)
+    if (hovered) {
+      const box = createBox({
+        x: hovered.object.position.x + hovered.face.normal.x * boxSize,
+        y: hovered.object.position.y + hovered.face.normal.y * boxSize,
+        z: hovered.object.position.z + hovered.face.normal.z * boxSize,
+        size: boxSize
+      })
+      grid.push(box)
+      scene.add(box)
+    }
   }
 
 }

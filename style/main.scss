@@ -1,1 +1,29 @@
 @import 'reset';
+
+body {
+  color: rgba(255, 255, 255, 0.8);
+  font-family: 'Helvetica Neue', sans-serif;
+  font-weight: lighter;
+  letter-spacing: 2px;
+
+  overflow-y: scroll;
+  height: 100%;
+  height: 100vh;
+  margin: 0;
+
+  background: rgb(34, 48, 65);
+}
+
+#scene {
+  height: 100vh;
+
+  canvas {
+    background: transparent;
+    margin: 0;
+    padding: 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 0;
+  }
+}

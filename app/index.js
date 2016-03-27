@@ -24,9 +24,6 @@ export function createScene() {
   const mouse = new Vector2()
   const clock = new Clock()
 
-  // scene.fog = new THREE.Fog( 0x808080, 2000, 4000 );
-
-
   const boxSize = 40
 
   window.camera = camera
@@ -37,7 +34,7 @@ export function createScene() {
   let grid = []
   for (let x = 0; x < 10; x++) {
     for(let y = 0; y < 12; y++) {
-      for(let z = 0; z < 3; z++) {
+      for(let z = 0; z < 8; z++) {
         if (z == 0 || Math.random() > 0.8) {
           const box = createBox({
             x: (x * boxSize) - (boxSize * 10) / 2,
@@ -84,21 +81,18 @@ export function createScene() {
   scene.add(object)
 
   let delta = 0
+  let hovered
 
   animate()
+
   function animate() {
     requestAnimationFrame(animate)
     render()
   }
 
-  let hovered
   function render() {
     delta = clock.getDelta()
     controls.update(delta)
-
-    if (hovered) {
-      // setFaceColor(hovered.object, hovered.faceIndex, 0xffffff)
-    }
 
     raycaster.setFromCamera(mouse, camera)
     let intersects = raycaster.intersectObjects(grid)
@@ -110,30 +104,38 @@ export function createScene() {
         hovered.object.position.y + hovered.face.normal.y,
         hovered.object.position.z + hovered.face.normal.z,
       )
-
-      // setFaceColor(hovered.object, hovered.faceIndex, 0x336699)
     }
 
     renderer.render(scene, camera)
   }
 
   window.addEventListener('resize', onWindowResize, true)
+  window.addEventListener('mousemove', onMouseMove, false)
+  window.addEventListener('click', onLeftClick, false)
+  window.addEventListener('contextmenu', onRightClick, false)
+
   onWindowResize()
+
+  function onRightClick(event) {
+    event.preventDefault()
+    scene.remove(hovered.object)
+    const index = grid.indexOf(hovered.object)
+    grid.splice(index, 1);
+    return false
+  }
+
   function onWindowResize() {
     camera.aspect = window.innerWidth / window.innerHeight
     camera.updateProjectionMatrix()
     renderer.setSize(window.innerWidth, window.innerHeight)
   }
 
-  window.addEventListener('mousemove', onMouseMove, false)
   function onMouseMove(event) {
-  	// calculate mouse position in normalized device coordinates
-  	// (-1 to +1) for both components
   	mouse.x = (event.clientX / window.innerWidth) * 2 - 1
   	mouse.y = - (event.clientY / window.innerHeight) * 2 + 1
   }
 
-  window.addEventListener('click', (event) => {
+  function onLeftClick(event) {
     console.log('hovered', hovered)
 
     const box = createBox({
@@ -144,16 +146,8 @@ export function createScene() {
     })
     grid.push(box)
     scene.add(box)
-  }, false)
+  }
+
 }
 
 createScene()
-
-function setFaceColor(object, faceIndex, color) {
-  faceIndex = faceIndex % 2 === 1 ? faceIndex - 1 : faceIndex
-
-  object.geometry.faces[faceIndex].color.set(color)
-  object.geometry.faces[faceIndex + 1].color.set(color)
-  object.geometry.faces
-  object.geometry.colorsNeedUpdate = true
-}

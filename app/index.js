@@ -3,6 +3,7 @@ import THREE, {
   Clock,
   Color,
   Fog,
+  Geometry,
   Object3D,
   PointLight,
   Raycaster,
@@ -17,6 +18,7 @@ import { randomize } from './utils'
 import { createFlyControls } from './flyControls'
 import { minBy } from './utils/array'
 import { createHighlight } from './highlight'
+import { createLine } from './createLine'
 
 export function createScene() {
   const scene = new Scene()
@@ -30,7 +32,7 @@ export function createScene() {
   window.camera = camera
 
   camera.position.set(0, 400, 500)
-  camera.lookAt(new Vector3(0, 80, 0))
+  // camera.lookAt(new Vector3(0, 80, 0))
 
   const highlight = createHighlight({ size: boxSize })
   scene.add(highlight)

@@ -17,7 +17,6 @@ import THREE, {
 } from 'three'
 import { createCamera } from './camera'
 import { createBox } from './box'
-import { randomize } from './utils'
 import { createFlyControls } from './flyControls'
 import { minBy } from './utils/array'
 import { createHighlight } from './highlight'
@@ -177,7 +176,7 @@ export function createScene() {
     }
   }
 
-  function onRightClick(event) {
+  function onLeftClick(event) {
     event.preventDefault()
     if (hovered) {
       // scene.remove(hovered.object)
@@ -190,23 +189,7 @@ export function createScene() {
     return false
   }
 
-  function onWindowResize() {
-    const { width, height } = sceneEl.getBoundingClientRect()
-
-    camera.aspect = width / height
-    camera.updateProjectionMatrix()
-    renderer.setSize(width, height)
-  }
-
-  function onMouseMove(event) {
-    const { width, height, left } = sceneEl.getBoundingClientRect()
-    
-    // x and y expected to be between -1 and 1
-  	mouse.x = (event.clientX - left) / width * 2 - 1
-  	mouse.y = - (event.clientY / height) * 2 + 1
-  }
-
-  function onLeftClick(event) {
+  function onRightClick(event) {
     if (hovered) {
       const box = createBox({
         x: hovered.object.position.x + hovered.face.normal.x * boxSize,
@@ -217,6 +200,22 @@ export function createScene() {
       grid.push(box)
       scene.add(box)
     }
+  }
+
+  function onWindowResize() {
+    const { width, height } = sceneEl.getBoundingClientRect()
+
+    camera.aspect = width / height
+    camera.updateProjectionMatrix()
+    renderer.setSize(width, height)
+  }
+
+  function onMouseMove(event) {
+    const { width, height, left } = sceneEl.getBoundingClientRect()
+
+    // x and y expected to be between -1 and 1
+  	mouse.x = (event.clientX - left) / width * 2 - 1
+  	mouse.y = - (event.clientY / height) * 2 + 1
   }
 
 }

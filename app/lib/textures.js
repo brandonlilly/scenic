@@ -26,6 +26,7 @@ textures.forEach(texture => {
   image.magFilter = NearestFilter
 
   const material = new MeshLambertMaterial({ map: image, transparent: true })
+  material.minecraftType = texture
 
   textureData[texture] = {
     name: texture,

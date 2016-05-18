@@ -1,0 +1,12 @@
+.texturePicker {
+  
+
+  .textureDisplay {
+    display: flex;
+    width: 96px;
+    height: 96px;
+    margin: 10px;
+    background-size: cover;
+    image-rendering: pixelated;
+  }
+}

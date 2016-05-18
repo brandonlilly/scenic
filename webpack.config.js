@@ -1,6 +1,9 @@
 var path = require('path');
 var webpack = require('webpack');
 
+var ExtractTextPlugin = require('extract-text-webpack-plugin');
+var extractSASS = new ExtractTextPlugin('styles.css');
+
 var config = {
   devtool : 'eval-source-map',
 
@@ -26,12 +29,16 @@ var config = {
       {
         test: /\.scss$/,
         loaders: ['style', 'css?sourceMap', 'sass?sourceMap'],
+        loader: extractSASS.extract('style-loader', 'css!sass'),
       },
     ]
   },
   sassLoader: {
     includePaths: [path.join(__dirname, "style")]
-  }
+  },
+  plugins: [
+    extractSASS,
+  ]
 };
 
 module.exports = config;

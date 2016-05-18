@@ -153,7 +153,7 @@ export function createScene() {
   sceneEl.addEventListener('contextmenu', onRightClick, false)
   sceneEl.addEventListener('keypress', onKeyPress, false)
 
-  setTimeout(onWindowResize, 0)
+  onWindowResize()
 
   function changeTexture(image) {
     const texture = (new TextureLoader()).load(`textures/${image}.png`)
@@ -200,6 +200,8 @@ export function createScene() {
 
   function onMouseMove(event) {
     const { width, height, left } = sceneEl.getBoundingClientRect()
+    
+    // x and y expected to be between -1 and 1
   	mouse.x = (event.clientX - left) / width * 2 - 1
   	mouse.y = - (event.clientY / height) * 2 + 1
   }

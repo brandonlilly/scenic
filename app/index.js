@@ -4,10 +4,13 @@ import THREE, {
   Color,
   Fog,
   Geometry,
+  NearestFilter,
   Object3D,
   PointLight,
   Raycaster,
   Scene,
+  SpotLight,
+  TextureLoader,
   Vector2,
   Vector3,
   WebGLRenderer
@@ -18,7 +21,10 @@ import { randomize } from './utils'
 import { createFlyControls } from './flyControls'
 import { minBy } from './utils/array'
 import { createHighlight } from './highlight'
-import { createLine } from './createLine'
+import { createSkybox } from './skybox'
+import textureData from './lib/textures'
+import { createGrass, createDirt, createWood, createDoor } from './lib/entities'
+import { createTree, createHouse } from './lib/structures'
 
 export function createScene() {
   const scene = new Scene()
@@ -27,12 +33,21 @@ export function createScene() {
   const mouse = new Vector2()
   const clock = new Clock()
 
-  const boxSize = 40
+  const boxSize = 32
 
-  window.camera = camera
+  const skybox = createSkybox()
+  scene.add(skybox)
 
-  camera.position.set(0, 400, 500)
-  // camera.lookAt(new Vector3(0, 80, 0))
+
+  const renderer = new WebGLRenderer({
+    antialiasing: true,
+    precision: "highp",
+    preserveDrawingBuffer: true,
+    alpha: true,
+  })
+
+  renderer.shadowMap.enabled = false
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap
 
   const highlight = createHighlight({ size: boxSize })
   scene.add(highlight)
@@ -40,13 +55,12 @@ export function createScene() {
   let grid = []
   for (let x = 0; x < 10; x++) {
     for(let y = 0; y < 12; y++) {
-      for(let z = 0; z < 8; z++) {
+      for(let z = 0; z < 1; z++) {
         if (z == 0 || Math.random() > 0.95) {
-          const box = createBox({
+          const box = createGrass({
             x: (x * boxSize) - (boxSize * 10) / 2,
             y: (z * boxSize),
             z: (y * boxSize) - (boxSize * 12) / 2,
-            size: boxSize,
           })
           grid.push(box)
           scene.add(box)
@@ -55,31 +69,38 @@ export function createScene() {
     }
   }
 
-  const ambLight = new AmbientLight( 0x353535 )
+  const treeMeshes = createTree({ x: 64, y: 32, z: 64 })
+  treeMeshes.forEach(mesh => scene.add(mesh))
+  grid = grid.concat(treeMeshes)
+
+  const houseMeshes = createHouse({ x: -7 * boxSize, y: 0, z: 6 * boxSize })
+  houseMeshes.forEach(mesh => scene.add(mesh))
+  grid = grid.concat(houseMeshes)
+
+  const ambLight = new AmbientLight( 0x999999 )
   scene.add( ambLight )
 
   let pointLight = new PointLight( 0x4477aa, 1, 500 )
   pointLight.position.set( 50, 150, 100 )
+  pointLight.castShadow = true
   scene.add(pointLight)
 
-  pointLight = new PointLight( 0xff5566, 1, 500 )
+  pointLight = new SpotLight( 0xff5566, 1, 500, Math.PI / 4)
   pointLight.position.set( -50, 280, -280 )
+  pointLight.castShadow = true
   scene.add(pointLight)
 
-  const renderer = new WebGLRenderer({
-    antialiasing: true,
-    precision: "highp",
-    stencil: true,
-    preserveDrawingBuffer: true,
-    alpha: true,
-  })
+  let sun = new PointLight( 0xffffff, 1, 3000, 0 )
+  sun.position.set( -1300, 950, 1500 )
+  sun.castShadow = true
+  scene.add(sun)
 
   const container = document.getElementById("scene")
   container.appendChild(renderer.domElement)
 
   const object = new Object3D()
   const controls = createFlyControls(object, {
-    movementSpeed: 100,
+    movementSpeed: 150,
     domElement:   container,
     rollSpeed:    Math.PI / 3,
     autoForward:  false,
@@ -87,8 +108,13 @@ export function createScene() {
     predicate:    arg => true,
   })
 
+  window.controls = controls
+
   object.add(camera)
   scene.add(object)
+
+  object.position.set(-32, 48, -160)
+  object.rotation.y = Math.PI
 
   let delta = 0
   let hovered
@@ -96,8 +122,8 @@ export function createScene() {
   animate()
 
   function animate() {
-    requestAnimationFrame(animate)
     render()
+    requestAnimationFrame(animate)
   }
 
   function render() {
@@ -106,7 +132,7 @@ export function createScene() {
 
     raycaster.setFromCamera(mouse, camera)
     let intersects = raycaster.intersectObjects(grid)
-    hovered = minBy(intersects, intersect => intersect.distance)
+    hovered = intersects[0]
 
     if (hovered) {
       highlight.position.set(
@@ -119,37 +145,66 @@ export function createScene() {
     renderer.render(scene, camera)
   }
 
-  window.addEventListener('resize', onWindowResize, true)
-  window.addEventListener('mousemove', onMouseMove, false)
-  window.addEventListener('click', onLeftClick, false)
-  window.addEventListener('contextmenu', onRightClick, false)
+  const sceneEl = document.getElementById('scene')
 
-  onWindowResize()
+  window.addEventListener('resize', onWindowResize, true)
+  sceneEl.addEventListener('mousemove', onMouseMove, false)
+  sceneEl.addEventListener('click', onLeftClick, false)
+  sceneEl.addEventListener('contextmenu', onRightClick, false)
+  sceneEl.addEventListener('keypress', onKeyPress, false)
+
+  setTimeout(onWindowResize, 0)
+
+  function changeTexture(image) {
+    const texture = (new TextureLoader()).load(`textures/${image}.png`)
+    texture.magFilter = NearestFilter
+
+    grid.forEach(box => {
+      box.material.map = texture
+      box.material.map.needsUpdate = true
+    })
+  }
+
+  function onKeyPress(event) {
+    const keys = { t: 116, y: 121 }
+
+    // t is pressed
+    if (event.keyCode == keys.t) {
+      changeTexture("grass-and-side")
+    }
+    if (event.keyCode == keys.y) {
+      changeTexture("grass_side")
+    }
+  }
 
   function onRightClick(event) {
     event.preventDefault()
     if (hovered) {
-      scene.remove(hovered.object)
-      const index = grid.indexOf(hovered.object)
-      grid.splice(index, 1)
+      // scene.remove(hovered.object)
+      // const index = grid.indexOf(hovered.object)
+      // grid.splice(index, 1)
+      let materialIndex = hovered.face.materialIndex
+      let type = hovered.object.material.materials[materialIndex].minecraftType
+      console.log(type)
     }
     return false
   }
 
   function onWindowResize() {
-    camera.aspect = window.innerWidth / window.innerHeight
+    const { width, height } = sceneEl.getBoundingClientRect()
+
+    camera.aspect = width / height
     camera.updateProjectionMatrix()
-    renderer.setSize(window.innerWidth, window.innerHeight)
+    renderer.setSize(width, height)
   }
 
   function onMouseMove(event) {
-  	mouse.x = (event.clientX / window.innerWidth) * 2 - 1
-  	mouse.y = - (event.clientY / window.innerHeight) * 2 + 1
+    const { width, height, left } = sceneEl.getBoundingClientRect()
+  	mouse.x = (event.clientX - left) / width * 2 - 1
+  	mouse.y = - (event.clientY / height) * 2 + 1
   }
 
   function onLeftClick(event) {
-    console.log('hovered', hovered)
-
     if (hovered) {
       const box = createBox({
         x: hovered.object.position.x + hovered.face.normal.x * boxSize,

@@ -22,6 +22,6 @@
     "webpack": "^1.12.9"
   },
   "dependencies": {
-    "three": "^0.75.0"
+    "three": "^0.76.1"
   }
 }

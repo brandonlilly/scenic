@@ -8,8 +8,8 @@ function newCamera(Camera, { viewAngle, aspectRatio, near, far }){
 
 export function createCamera() {
   const camera = newCamera(PerspectiveCamera, {
-    viewAngle: 50,
-    aspectRatio: window.innerWidth / window.innerHeight,
+    viewAngle: 60,
+    aspectRatio: window.innerWidth / 2 / window.innerHeight,
     near: 1,
     far: 5000
   })

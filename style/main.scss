@@ -16,14 +16,19 @@ body {
 
 #scene {
   height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 50%;
+  right: 0;
+  z-index: 0;
 
   canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
     background: transparent;
     margin: 0;
     padding: 0;
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 0;
   }
 }

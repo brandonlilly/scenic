@@ -20,12 +20,11 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 #scene {
-  height: 450px;
-  width: 1000px;
-  margin: 40px auto;
-  display: block;
-  position: relative;
-  box-shadow: 0 0 6px rgba(0, 0, 0, 0.3);
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  position: fixed;
 
   canvas {
     position: absolute;

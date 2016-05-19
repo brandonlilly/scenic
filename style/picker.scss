@@ -1,12 +1,21 @@
 .texturePicker {
+  display: block;
   
+  section {
+    display: flex;
+    flex-flow: row wrap;
+  }
 
   .textureDisplay {
-    display: flex;
+    // display: flex;
     width: 96px;
     height: 96px;
     margin: 10px;
     background-size: cover;
     image-rendering: pixelated;
+
+    &.active {
+      outline: 4px solid rgb(251, 189, 68);
+    }
   }
 }

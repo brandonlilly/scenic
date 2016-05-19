@@ -25,7 +25,7 @@ import textureData from './lib/textures'
 import { createGrass, createDirt, createWood, createDoor } from './lib/entities'
 import { createTree, createHouse } from './lib/structures'
 
-export function createScene() {
+export function createScene({ onTextureSelect }) {
   const scene = new Scene()
   const camera = createCamera()
   const raycaster = new Raycaster()
@@ -52,8 +52,8 @@ export function createScene() {
   scene.add(highlight)
 
   let grid = []
-  for (let x = 0; x < 10; x++) {
-    for(let y = 0; y < 12; y++) {
+  for (let x = -5; x < 12; x++) {
+    for(let y = 0; y < 14; y++) {
       for(let z = 0; z < 1; z++) {
         if (z == 0 || Math.random() > 0.95) {
           const box = createGrass({
@@ -181,12 +181,15 @@ export function createScene() {
   function onLeftClick(event) {
     event.preventDefault()
     if (hovered) {
+      // remove block
       // scene.remove(hovered.object)
       // const index = grid.indexOf(hovered.object)
       // grid.splice(index, 1)
+
       let materialIndex = hovered.face.materialIndex
       let type = hovered.object.material.materials[materialIndex].minecraftType
-      console.log(type)
+
+      onTextureSelect(type)
     }
     return false
   }
@@ -220,4 +223,11 @@ export function createScene() {
   	mouse.y = - (event.clientY / height) * 2 + 1
   }
 
+}
+
+export function selectImage(textureName, index) {
+  const texture = textureData[textureName]
+  const image = texture.images[index]
+
+  texture.material.map = image
 }

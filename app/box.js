@@ -22,13 +22,6 @@ grass_side_material.minecraftType = "grass_side"
 grass_top_material.minecraftType = "grass_top"
 dirt_material.minecraftType = "dirt"
 
-// setTimeout((...args) => {
-//   console.log('timeout!');
-//   grass_side_material.map = grass_top_texture
-//   grass_side_material.map.needsUpdate = true
-//   console.log(grass_side_material);
-// }, 4000)
-
 const materials = [
   grass_side_material,
   grass_side_material,

@@ -1,12 +1,6 @@
 import { createWood, createLeaves, createPlanks, createDoor, createGlass, createWool } from './entities'
-
+import { times } from '../utils/integer'
 const size = 32
-
-function times(num, callback) {
-  for(let i = 0; i < num; i++) {
-    callback(i)
-  }
-}
 
 export function createTree({ x, y, z }) {
   const meshes = []
@@ -43,30 +37,30 @@ export function createHouse({ x, y, z }) {
   const meshes = []
 
   const floors = [
-    "        \n" +
-    " LLLLLL \n" +
-    " LLLLLL \n" +
-    " LLLLLL \n" +
-    " LLLLLL \n" +
-    "   LL   ",
-    "WWWWWWWW\n" +
-    "W      W\n" +
-    "W      W\n" +
-    "W      W\n" +
-    "W      W\n" +
-    "WWWDDWWW",
-    "WWWWWWWW\n" +
-    "W      W\n" +
-    "W      W\n" +
-    "W      W\n" +
-    "W      W\n" +
-    "WGW  WGW",
-    "WWWWWWWW\n" +
-    "W      W\n" +
-    "W      W\n" +
-    "W      W\n" +
-    "W      W\n" +
-    "WWWWWWWW",
+    "       \n" +
+    " LLLLL \n" +
+    " LLLLL \n" +
+    " LLLLL \n" +
+    " LLLLL \n" +
+    "   L   ",
+    "WWWWWWW\n" +
+    "W     W\n" +
+    "W     W\n" +
+    "W     W\n" +
+    "W     W\n" +
+    "WWWDWWW",
+    "WWWWWWW\n" +
+    "W     W\n" +
+    "W     W\n" +
+    "W     W\n" +
+    "W     W\n" +
+    "WGW WGW",
+    "WWWWWWW\n" +
+    "W     W\n" +
+    "W     W\n" +
+    "W     W\n" +
+    "W     W\n" +
+    "WWWWWWW",
   ]
 
   floors.forEach((floor, yIdx) => {

@@ -1,26 +1,41 @@
 import React from 'react'
+import { times } from '../utils/integer'
+import { classSet } from '../utils/react'
 
-const TextureDisplay = ({ texture, image }) => {
-  const url = `textures/${texture}/${image}.png`
+const TextureDisplay = ({ texture, index, active, onClick }) => {
+  const { name, width, height } = texture
 
-  const style = {backgroundImage: `url("${url}")`}
+  const url = `textures/${name}/${index}.png`
+  const style = {
+    backgroundImage: `url("${url}")`,
+    width: width * 3,
+    height: height * 3,
+  }
+  const classes = classSet({ textureDisplay: true, active })
 
   return (
-    <div className="textureDisplay" style={style}></div>
+    <article className={classes} style={style} onClick={onClick}></article>
   )
 }
 
-const TexturePicker = () => {
-  const texture = "planks_oak"
-  const images = [ "0", "1", "2", "3", "4", "5" ]
-
-
+const TexturePicker = ({ texture, selected, onSelect }) => {
   return (
     <div className="texturePicker">
-      <h2>{texture}</h2>
-      {images.map(image => (
-        <TextureDisplay texture={texture} image={image} key={image} />
-      ))}
+      <h2>{texture.display}</h2>
+      <section>
+        {times(texture.alts, index => (
+          <TextureDisplay
+            texture={texture}
+            index={index}
+            onClick={event => {
+              event.preventDefault()
+              onSelect(index)
+            }}
+            active={index === selected}
+            key={`${texture.name}-${index}`}
+          />
+        ))}
+      </section>
     </div>
   )
 }

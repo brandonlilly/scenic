@@ -1,11 +1,9 @@
-import { createScene } from './scene'
+import { createScene, selectImage } from './scene'
 import React from 'react'
 import ReactDOM from 'react-dom'
-import TexturePicker from './components/TexturePicker'
-
-createScene()
+import App from './components/App'
 
 ReactDOM.render(
-  <TexturePicker />,
+  <App/>,
   document.getElementById('app')
 )

@@ -56,13 +56,13 @@ let textures = {
     transparent: true,
   },
   log_oak: {
-    display: 'Log (Oak)',
+    display: 'Wood (Oak)',
     alts: 5,
     width: 32,
     height: 32,
   },
   log_oak_top: {
-    display: 'Log Top (Oak)',
+    display: 'Wood Top (Oak)',
     alts: 6,
     width: 32,
     height: 32,

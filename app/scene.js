@@ -112,10 +112,10 @@ export function createScene({ onTextureSelect }) {
   object.add(camera)
   scene.add(object)
 
-  object.position.set(135, 60, -245)
-  object.rotation.x = 2.9429
-  object.rotation.y = 0.4816
-  object.rotation.z = -3.0102
+  object.position.set(-5, 41, -103)
+  object.rotation.x = 2.8355
+  object.rotation.y = 0.1660
+  object.rotation.z = -3.0783
 
   let delta = 0
   let hovered
@@ -181,15 +181,11 @@ export function createScene({ onTextureSelect }) {
   function onLeftClick(event) {
     event.preventDefault()
     if (hovered) {
-      // remove block
-      // scene.remove(hovered.object)
-      // const index = grid.indexOf(hovered.object)
-      // grid.splice(index, 1)
-
       let materialIndex = hovered.face.materialIndex
       let type = hovered.object.material.materials[materialIndex].minecraftType
-
       onTextureSelect(type)
+    } else {
+      onTextureSelect(null)
     }
     return false
   }
@@ -216,11 +212,11 @@ export function createScene({ onTextureSelect }) {
   }
 
   function onMouseMove(event) {
-    const { width, height, left } = sceneEl.getBoundingClientRect()
+    const { width, height, left, top } = sceneEl.getBoundingClientRect()
 
-    // x and y expected to be between -1 and 1
+    // x sand y expected to be between -1 and 1
   	mouse.x = (event.clientX - left) / width * 2 - 1
-  	mouse.y = - (event.clientY / height) * 2 + 1
+  	mouse.y = - (event.clientY - top) / height * 2 + 1
   }
 
 }

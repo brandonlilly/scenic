@@ -1,13 +1,16 @@
 .texturePicker {
   display: block;
-  
+  text-align: center;
+
+  color: rgba(255, 255, 255, 1);
+
   section {
     display: flex;
     flex-flow: row wrap;
+    justify-content: center;
   }
 
   .textureDisplay {
-    // display: flex;
     width: 96px;
     height: 96px;
     margin: 10px;

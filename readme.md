@@ -1,6 +1,6 @@
 ## Scenic
 
-A quick prototype of 3D Minecraft scenes rendered using WebGL. Each object can be selected (raycasting) and its' textures swapped out for alternatives.
+A quick prototype of 3D Minecraft scenes rendered using WebGL. Each object can be selected (raycasting) and it's textures swapped out for alternatives.
 
 ![screenshot]
 
